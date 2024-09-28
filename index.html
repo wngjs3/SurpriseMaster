@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팬시한 선물 날짜 제안 사이트</title>
+    <style>
+        :root {
+            --primary-color: #6200ee;
+            --secondary-color: #03dac6;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --card-background: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+        .card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="date"], input[type="number"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #3700b3;
+        }
+        .interval-btn {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            margin: 5px;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .interval-btn.active {
+            background-color: #018786;
+            color: white;
+        }
+        .custom-date-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .custom-date-item button {
+            margin-left: 5px;
+            width: auto;
+        }
+        .explanation {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        .date-suggestion {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>팬시한 선물 날짜 제안 사이트</h1>
+        
+        <div class="card">
+            <h2>기본 기념일</h2>
+            <div id="fixedDates"></div>
+        </div>
+        
+        <div class="card">
+            <h2>추가 기념일</h2>
+            <input type="text" id="eventName" placeholder="기념일 이름">
+            <input type="text" id="eventDate" placeholder="MM-DD">
+            <button onclick="addCustomEvent()">추가</button>
+            <div id="customDates"></div>
+        </div>
+        
+        <div class="card">
+            <h2>선물 랜덤 주기 설정</h2>
+            <input type="number" id="customInterval" min="7" value="30">
+            <div>
+                <button class="interval-btn" onclick="setInterval(14)">2주</button>
+                <button class="interval-btn" onclick="setInterval(21)">3주</button>
+                <button class="interval-btn" onclick="setInterval(30)">1달</button>
+                <button class="interval-btn" onclick="setInterval(60)">2달</button>
+                <button class="interval-btn" onclick="setInterval(90)">3달</button>
+            </div>
+            <p class="explanation">
+                랜덤 주기 설정: 설정한 일수를 기준으로 ±25% 범위 내에서 랜덤하게 날짜가 선택됩니다.<br>
+                예: 30일 설정 시 23일에서 30일 사이의 랜덤한 날짜가 선택됩니다.
+            </p>
+        </div>
+        
+        <div class="card">
+            <h2>기간 설정</h2>
+            <label for="startDate">시작일:</label>
+            <input type="date" id="startDate" value="">
+            <label for="endDate">종료일:</label>
+            <input type="date" id="endDate">
+        </div>
+        
+        <div class="card">
+            <h2>추천 날짜</h2>
+            <button onclick="generateSuggestions()">추천 날짜 생성</button>
+            <div id="suggestions"></div>
+        </div>
+        
+        <div class="card">
+            <h2>캘린더에 추가</h2>
+            <button onclick="exportToCalendar()">모든 날짜를 캘린더에 추가</button>
+        </div>
+    </div>
+
+    <script>
+        const fixedDates = [
+            {id: "valentine", name: "발렌타인 데이", date: "02-14", checked: true},
+            {id: "whiteday", name: "화이트 데이", date: "03-14", checked: true},
+            {id: "christmas", name: "크리스마스", date: "12-25", checked: true}
+        ];
+        let customDates = [];
+        let suggestedDates = [];
+
+        function displayFixedDates() {
+            const fixedDatesDiv = document.getElementById("fixedDates");
+            fixedDatesDiv.innerHTML = fixedDates.map(date => `
+                <div>
+                    <input type="checkbox" id="${date.id}" ${date.checked ? 'checked' : ''} onchange="updateFixedDate('${date.id}')">
+                    <label for="${date.id}">${date.name}: ${date.date}</label>
+                </div>
+            `).join("");
+        }
+
+        function updateFixedDate(id) {
+            const index = fixedDates.findIndex(date => date.id === id);
+            if (index !== -1) {
+                fixedDates[index].checked = !fixedDates[index].checked;
+            }
+        }
+
+        function addCustomEvent() {
+            const name = document.getElementById("eventName").value;
+            const date = document.getElementById("eventDate").value;
+            if (name && date && /^\d{2}-\d{2}$/.test(date)) {
+                customDates.push({name, date});
+                displayCustomDates();
+                document.getElementById("eventName").value = "";
+                document.getElementById("eventDate").value = "";
+            } else {
+                alert("올바른 형식으로 입력해주세요. (예: 01-01)");
+            }
+        }
+
+        function displayCustomDates() {
+            const customDatesDiv = document.getElementById("customDates");
+            customDatesDiv.innerHTML = customDates.map((date, index) => `
+                <div class="custom-date-item">
+                    <span>${date.name}: ${date.date}</span>
+                    <button onclick="editCustomEvent(${index})">수정</button>
+                    <button onclick="deleteCustomEvent(${index})">삭제</button>
+                </div>
+            `).join("");
+        }
+
+        function editCustomEvent(index) {
+            const event = customDates[index];
+            document.getElementById("eventName").value = event.name;
+            document.getElementById("eventDate").value = event.date;
+            customDates.splice(index, 1);
+            displayCustomDates();
+        }
+
+        function deleteCustomEvent(index) {
+            if (confirm("이 기념일을 삭제하시겠습니까?")) {
+                customDates.splice(index, 1);
+                displayCustomDates();
+            }
+        }
+
+        function setInterval(days) {
+            document.getElementById("customInterval").value = days;
+            document.querySelectorAll('.interval-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function generateSuggestions() {
+            const interval = Math.max(7, parseInt(document.getElementById("customInterval").value));
+            const startDate = new Date(document.getElementById("startDate").value);
+            const endDate = new Date(document.getElementById("endDate").value);
+            const suggestionsDiv = document.getElementById("suggestions");
+            
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                alert("올바른 시작일과 종료일을 선택해주세요.");
+                return;
+            }
+            
+            suggestedDates = [];
+            
+            const selectedFixedDates = fixedDates.filter(date => date.checked);
+            const allDates = [...selectedFixedDates, ...customDates];
+            for (let year = startDate.getFullYear(); year <= endDate.getFullYear(); year++) {
+                allDates.forEach(event => {
+                    const [month, day] = event.date.split('-').map(Number);
+                    const eventDate = new Date(year, month - 1, day);
+                    if (eventDate >= startDate && eventDate <= endDate) {
+                        suggestedDates.push({name: event.name, date: eventDate});
+                    }
+                });
+            }
+
+            let currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                const randomRange = Math.floor(interval / 4);
+                const minDays = interval - randomRange;
+                const maxDays = interval;
+                const randomDays = Math.floor(Math.random() * (maxDays - minDays + 1)) + minDays;
+                
+                const randomDate = new Date(currentDate.getTime() + randomDays * 24 * 60 * 60 * 1000);
+                
+                if (randomDate <= endDate && !isConflictingDate(randomDate, interval)) {
+                    suggestedDates.push({
+                        name: `랜덤 선물 추천일`,
+                        date: randomDate
+                    });
+                }
+                
+                currentDate = new Date(currentDate.getTime() + interval * 24 * 60 * 60 * 1000);
+            }
+            
+            suggestedDates.sort((a, b) => a.date - b.date);
+            
+            suggestionsDiv.innerHTML = suggestedDates.map(suggestion => 
+                `<div class="date-suggestion">${suggestion.name}: ${suggestion.date.toISOString().split('T')[0]}</div>`
+            ).join("");
+        }
+
+        function isConflictingDate(date, interval) {
+            return suggestedDates.some(suggestion => {
+                const daysDifference = Math.abs(suggestion.date - date) / (24 * 60 * 60 * 1000);
+                return daysDifference < interval;
+            });
+        }
+
+        function exportToCalendar() {
+            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//선물 날짜 제안 사이트//KO\n";
+            
+            suggestedDates.forEach(event => {
+                const dateString = event.date.toISOString().replace(/-|:|\.\d+/g, '');
+                icsContent += `BEGIN:VEVENT\n`;
+                icsContent += `DTSTART;VALUE=DATE:${dateString.slice(0,8)}\n`;
+                icsContent += `SUMMARY:${event.name}\n`;
+                icsContent += `END:VEVENT\n`;
+            });
+            
+            icsContent += "END:VCALENDAR";
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "gift_suggestions.ics";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        displayFixedDates();
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("startDate").value = today;
+        const oneYearLater = new Date();
+        oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+        document.getElementById("endDate").value = oneYearLater.toISOString().split('T')[0];
+    </script>
+</body>
+</html>
