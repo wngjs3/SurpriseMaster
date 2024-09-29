@@ -3,117 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>팬시한 선물 날짜 제안 사이트</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>선물 날짜 추천 받기</title>
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 아이콘 폰트 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #6200ee;
-            --secondary-color: #03dac6;
-            --background-color: #f5f5f5;
-            --text-color: #333;
-            --card-background: #ffffff;
-        }
+        /* 기본 스타일 */
         body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
             margin: 0;
-            padding: 0;
+            font-family: 'Noto Sans KR', 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            overflow: hidden; /* 스크롤 바를 숨김 */
         }
+
+        /* 배경 캔버스 스타일 */
+        #backgroundCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 1;
+            overflow-y: auto; /* 컨테이너 내부에서 스크롤 가능 */
+            height: 100vh; /* 전체 화면 높이 */
         }
+
         h1, h2 {
-            color: var(--primary-color);
+            color: #333;
             text-align: center;
+            margin-bottom: 30px;
         }
+
+        /* 카드 스타일 */
         .card {
-            background-color: var(--card-background);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: box-shadow 0.3s ease;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(4px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .card:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
         }
-        input[type="text"], input[type="date"], input[type="number"], button {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+
+        /* 입력 및 버튼 스타일 */
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
         button {
-            background-color: var(--primary-color);
-            color: white;
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
             border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #333;
         }
+
+        button {
+            background-color: #3498db;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.4s ease;
+            color: #fff;
+        }
+
         button:hover {
-            background-color: #3700b3;
+            background-color: #2980b9;
         }
+
+        /* 인터벌 버튼 스타일 */
         .interval-btn {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
+            background-color: #3498db;
+            color: #fff;
             margin: 5px;
-            padding: 10px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            display: inline-block;
         }
+
+        .interval-btn:hover {
+            background-color: #2980b9;
+        }
+
         .interval-btn.active {
-            background-color: #018786;
-            color: white;
+            background-color: #2980b9;
+            box-shadow: 0 0 10px rgba(41, 128, 185, 0.5);
         }
+
+        /* 설명 스타일 */
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            line-height: 1.5;
+        }
+
+        /* 날짜 제안 스타일 */
+        .date-suggestion {
+            background-color: #9b59b6;
+            color: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .date-suggestion:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .date-suggestion i {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+
+        /* 커스텀 날짜 아이템 스타일 */
         .custom-date-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .custom-date-item span {
+            color: #333;
+        }
+
+        .custom-date-item button {
+            background: none;
+            border: none;
+            color: #3498db;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 1em;
+        }
+
+        .custom-date-item button:hover {
+            color: #2980b9;
+        }
+
+        /* 체크박스 및 레이블 스타일 */
+        #fixedDates div {
             display: flex;
             align-items: center;
             margin-bottom: 10px;
         }
-        .custom-date-item button {
-            margin-left: 5px;
-            width: auto;
+
+        #fixedDates label {
+            margin-left: 10px;
+            color: #333;
         }
-        .explanation {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #e9e9e9;
-            border-radius: 4px;
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3498db;
         }
-        .date-suggestion {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            transition: transform 0.3s ease;
-        }
-        .date-suggestion:hover {
-            transform: translateY(-3px);
-        }
+
+        /* 반응형 디자인 */
         @media (max-width: 600px) {
             .container {
-                padding: 10px;
+                padding: 15px;
             }
             .card {
-                padding: 15px;
+                padding: 20px;
+            }
+            h1, h2 {
+                font-size: 1.5em;
             }
         }
     </style>
 </head>
 <body>
+    <canvas id="backgroundCanvas"></canvas>
     <div class="container">
-        <h1>팬시한 선물 날짜 제안 사이트</h1>
+        <h1>선물 날짜 추천 받기</h1>
         
         <div class="card">
             <h2>기본 기념일</h2>
@@ -123,8 +216,8 @@
         <div class="card">
             <h2>추가 기념일</h2>
             <input type="text" id="eventName" placeholder="기념일 이름">
-            <input type="text" id="eventDate" placeholder="MMDD" maxlength="5">
-            <button onclick="addCustomEvent()">추가</button>
+            <input type="text" id="eventDate" placeholder="MM-DD" maxlength="5">
+            <button onclick="addCustomEvent()"><i class="fas fa-plus"></i> 추가</button>
             <div id="customDates"></div>
         </div>
         
@@ -132,15 +225,15 @@
             <h2>선물 랜덤 주기 설정</h2>
             <input type="number" id="customInterval" min="7" value="30">
             <div>
-                <button class="interval-btn" onclick="setInterval(14)">2주</button>
-                <button class="interval-btn" onclick="setInterval(21)">3주</button>
-                <button class="interval-btn" onclick="setInterval(30)">1달</button>
-                <button class="interval-btn" onclick="setInterval(60)">2달</button>
-                <button class="interval-btn" onclick="setInterval(90)">3달</button>
+                <button class="interval-btn" onclick="setIntervalDays(14, event)">2주</button>
+                <button class="interval-btn" onclick="setIntervalDays(21, event)">3주</button>
+                <button class="interval-btn" onclick="setIntervalDays(30, event)">1달</button>
+                <button class="interval-btn" onclick="setIntervalDays(60, event)">2달</button>
+                <button class="interval-btn" onclick="setIntervalDays(90, event)">3달</button>
             </div>
             <p class="explanation">
                 랜덤 주기 설정: 설정한 일수를 기준으로 ±25% 범위 내에서 랜덤하게 날짜가 선택됩니다.<br>
-                예: 30일 설정 시 23일에서 30일 사이의 랜덤한 날짜가 선택됩니다.
+                예: 30일 설정 시 23일에서 37일 사이의 랜덤한 날짜가 선택됩니다.
             </p>
         </div>
         
@@ -154,13 +247,13 @@
         
         <div class="card">
             <h2>추천 날짜</h2>
-            <button onclick="generateSuggestions()">추천 날짜 생성</button>
+            <button onclick="generateSuggestions()"><i class="fas fa-magic"></i> 추천 날짜 생성</button>
             <div id="suggestions"></div>
         </div>
         
         <div class="card">
             <h2>캘린더에 추가</h2>
-            <button onclick="exportToCalendar()">모든 날짜를 캘린더에 추가</button>
+            <button onclick="exportToCalendar()"><i class="fas fa-calendar-plus"></i> 모든 날짜를 캘린더에 추가</button>
         </div>
     </div>
 
@@ -208,8 +301,9 @@
             customDatesDiv.innerHTML = customDates.map((date, index) => `
                 <div class="custom-date-item">
                     <span>${date.name}: ${date.date}</span>
-                    <button onclick="editCustomEvent(${index})">수정</button>
-                    <button onclick="deleteCustomEvent(${index})">삭제</button>
+                    <div>
+                        <button onclick="editCustomEvent(${index})"><i class="fas fa-edit"></i> 수정</button>
+                    </div>
                 </div>
             `).join("");
         }
@@ -222,14 +316,7 @@
             displayCustomDates();
         }
 
-        function deleteCustomEvent(index) {
-            if (confirm("이 기념일을 삭제하시겠습니까?")) {
-                customDates.splice(index, 1);
-                displayCustomDates();
-            }
-        }
-
-        function setInterval(days) {
+        function setIntervalDays(days, event) {
             document.getElementById("customInterval").value = days;
             document.querySelectorAll('.interval-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -264,9 +351,9 @@
 
             let currentDate = new Date(startDate);
             while (currentDate <= endDate) {
-                const randomRange = Math.floor(interval / 4);
+                const randomRange = Math.floor(interval * 0.25);
                 const minDays = interval - randomRange;
-                const maxDays = interval;
+                const maxDays = interval + randomRange;
                 const randomDays = Math.floor(Math.random() * (maxDays - minDays + 1)) + minDays;
                 
                 const randomDate = new Date(currentDate.getTime() + randomDays * 24 * 60 * 60 * 1000);
@@ -284,7 +371,7 @@
             suggestedDates.sort((a, b) => a.date - b.date);
             
             suggestionsDiv.innerHTML = suggestedDates.map(suggestion => 
-                `<div class="date-suggestion">${suggestion.name}: ${suggestion.date.toISOString().split('T')[0]}</div>`
+                `<div class="date-suggestion"><i class="fas fa-gift"></i> ${suggestion.name}: ${suggestion.date.toISOString().split('T')[0]}</div>`
             ).join("");
         }
 
@@ -321,7 +408,7 @@
         document.getElementById("eventDate").addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.length > 2) {
-                value = value.slice(0, 2) + '-' + value.slice(2);
+                value = value.slice(0, 2) + '-' + value.slice(2, 4);
             }
             e.target.value = value;
         });
@@ -333,6 +420,71 @@
         const oneYearLater = new Date();
         oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
         document.getElementById("endDate").value = oneYearLater.toISOString().split('T')[0];
+
+        // De Jong Attractor 애니메이션 구현
+        const canvas = document.getElementById('backgroundCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            width = canvas.width;
+            height = canvas.height;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        let attractors = [];
+
+        let x = Math.random() * 2 - 1;
+        let y = Math.random() * 2 - 1;
+
+
+        function drawAttractors() {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.save();
+    const scale = Math.min(width, height) / 4;
+    ctx.translate(width / 2, height / 2);
+    ctx.scale(scale, scale);
+
+    const iterationsPerFrame = 2000;
+    for (let i = 0; i < iterationsPerFrame; i++) {
+        const time = Date.now() / 8000;
+        
+        // const scrollInfluence = window.scrollY / 10;
+        const scrollInfluence = 0;
+        const l =1;
+        const a = -1.1 + (Math.sin(time + scrollInfluence+0.01) * l/2) - l;
+        const b = -1.1 + (Math.cos(time + scrollInfluence+0.07) * l/2) - l;
+        const c = -1.4 + (Math.sin(time * 0.7 + scrollInfluence * 0.5+0.03) * l/2) - l;
+        const d = -1.4 + (Math.cos(time * 0.7 + scrollInfluence * 0.5+0.07) * l/2) - l;
+
+        const x1 = Math.sin(a * y) - Math.cos(b * x);
+        const y1 = Math.sin(c * x) - Math.cos(d * y);
+
+        x = x1;
+        y = y1;
+
+        ctx.beginPath();
+        ctx.arc(x, y, 0.005, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(0, 0, 0, 0.5)`;
+        ctx.fill();
+    }
+
+    ctx.restore();
+
+    requestAnimationFrame(drawAttractors);
+}
+
+
+
+// 페이지 로드시 어트랙터 생성 시작
+drawAttractors();
+
+
     </script>
 </body>
 </html>
