@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>팬시한 선물 날짜 제안 사이트</title>
+    <title>선물 날짜 제안 사이트</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* 배경 그라데이션 애니메이션 */
@@ -59,6 +59,7 @@
             background: rgba(255, 255, 255, 0.1);
             transform: rotate(45deg);
             animation: rotateBackground 6s linear infinite;
+            pointer-events: none; /* 클릭 이벤트 무시 */
         }
 
         @keyframes rotateBackground {
@@ -92,6 +93,7 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            border: none;
         }
 
         button:hover {
@@ -211,6 +213,37 @@
             font-size: 1em;
         }
 
+        /* 언어 전환 버튼 스타일 */
+
+        .language-switcher {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    padding: 10px 20px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: fixed; /* 화면에 고정 */
+    top: 10px; /* 상단에서 20px 떨어짐 */
+    right: 20px; /* 우측에서 20px 떨어짐 */
+    z-index: 1000; /* 화면 맨 위로 */
+    width: auto; /* 가로 크기를 자동으로 설정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    white-space: nowrap; /* 텍스트가 버튼 크기를 넘지 않도록 줄 바꿈 방지 */
+}
+
+
+        .language-switcher:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* 푸터 스타일 */
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9em;
+            color: #f1f2f6;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px 10px;
@@ -223,24 +256,29 @@
     </style>
 </head>
 <body>
+    <!-- 언어 전환 버튼 -->
+    <button class="language-switcher" onclick="toggleLanguage()">
+        한글/ENG
+    </button>
+
     <div class="container">
-        <h1>팬시한 선물 날짜 제안 사이트</h1>
+        <h1 data-lang-key="title">팬시한 선물 날짜 제안 사이트</h1>
 
         <div class="card">
-            <h2>기본 기념일</h2>
+            <h2 data-lang-key="basic_anniversaries">기본 기념일</h2>
             <div id="fixedDates"></div>
         </div>
 
         <div class="card">
-            <h2>추가 기념일</h2>
+            <h2 data-lang-key="add_custom_event">추가 기념일</h2>
             <input type="text" id="eventName" placeholder="기념일 이름">
             <input type="text" id="eventDate" placeholder="MM-DD" maxlength="5">
-            <button onclick="addCustomEvent()">추가</button>
+            <button onclick="addCustomEvent()" data-lang-key="add_button">추가</button>
             <div id="customDates"></div>
         </div>
 
         <div class="card">
-            <h2>선물 랜덤 주기 설정</h2>
+            <h2 data-lang-key="gift_interval_setting">선물 랜덤 주기 설정</h2>
             <input type="number" id="customInterval" min="7" value="30">
             <div>
                 <button class="interval-btn" onclick="setInterval(14, this)">2주</button>
@@ -249,37 +287,117 @@
                 <button class="interval-btn" onclick="setInterval(60, this)">2달</button>
                 <button class="interval-btn" onclick="setInterval(90, this)">3달</button>
             </div>
-            <p class="explanation">
+            <p class="explanation" data-lang-key="random_interval_explanation">
                 랜덤 주기 설정: 설정한 일수를 기준으로 ±25% 범위 내에서 랜덤하게 날짜가 선택됩니다.<br>
                 예: 30일 설정 시 23일에서 37일 사이의 랜덤한 날짜가 선택됩니다.
             </p>
         </div>
 
         <div class="card">
-            <h2>기간 설정</h2>
-            <label for="startDate">시작일:</label>
+            <h2 data-lang-key="period_setting">기간 설정</h2>
+            <label for="startDate" data-lang-key="start_date_label">시작일:</label>
             <input type="date" id="startDate" value="">
-            <label for="endDate">종료일:</label>
+            <label for="endDate" data-lang-key="end_date_label">종료일:</label>
             <input type="date" id="endDate">
         </div>
 
         <div class="card">
-            <h2>추천 날짜</h2>
-            <button onclick="generateSuggestions()">추천 날짜 생성</button>
+            <h2 data-lang-key="suggestions">추천 날짜</h2>
+            <button onclick="generateSuggestions()" data-lang-key="generate_suggestions">추천 날짜 생성</button>
             <div id="suggestions"></div>
         </div>
 
         <div class="card">
-            <h2>캘린더에 추가</h2>
-            <button onclick="exportToCalendar()">모든 날짜를 캘린더에 추가</button>
+            <h2 data-lang-key="add_to_calendar">캘린더에 추가</h2>
+            <button onclick="exportToCalendar()" data-lang-key="add_all_to_calendar">모든 날짜를 캘린더에 추가</button>
         </div>
     </div>
 
+    <!-- 푸터 추가 -->
+    <div class="footer" data-lang-key="footer_text">
+        Made by Juheon Choi
+    </div>
+
     <script>
+        // 다국어 지원을 위한 언어 데이터
+        const languageData = {
+            ko: {
+                title: "선물 날짜 제안 사이트",
+                basic_anniversaries: "기본 기념일",
+                add_custom_event: "추가 기념일",
+                event_name_placeholder: "기념일 이름",
+                event_date_placeholder: "MM-DD",
+                add_button: "추가",
+                gift_interval_setting: "선물 랜덤 주기 설정",
+                random_interval_explanation: "랜덤 주기 설정: 설정한 일수를 기준으로 ±25% 범위 내에서 랜덤하게 날짜가 선택됩니다.<br>예: 30일 설정 시 23일에서 37일 사이의 랜덤한 날짜가 선택됩니다.",
+                period_setting: "기간 설정",
+                start_date_label: "시작일:",
+                end_date_label: "종료일:",
+                generate_suggestions: "추천 날짜 생성",
+                suggestions: "추천 날짜",
+                add_to_calendar: "캘린더에 추가",
+                add_all_to_calendar: "모든 날짜를 캘린더에 추가",
+                random_gift_suggestion: "랜덤 선물 추천일",
+                edit_button: "수정",
+                delete_button: "삭제",
+                enter_valid_format: "올바른 형식으로 입력해주세요. (예: 01-01)",
+                delete_confirmation: "이 기념일을 삭제하시겠습니까?",
+                select_valid_dates: "올바른 시작일과 종료일을 선택해주세요.",
+                footer_text: "Made by Juheon Choi"
+            },
+            en: {
+                title: "Gift Date Suggestion Site",
+                basic_anniversaries: "Basic Anniversaries",
+                add_custom_event: "Add Custom Anniversary",
+                event_name_placeholder: "Event Name",
+                event_date_placeholder: "MM-DD",
+                add_button: "Add",
+                gift_interval_setting: "Random Gift Interval Setting",
+                random_interval_explanation: "Random Interval Setting: A random date is selected within ±25% of the set days.<br>Example: If set to 30 days, a random date between 23 and 37 days is selected.",
+                period_setting: "Set Period",
+                start_date_label: "Start Date:",
+                end_date_label: "End Date:",
+                generate_suggestions: "Generate Suggestions",
+                suggestions: "Date Suggestions",
+                add_to_calendar: "Add to Calendar",
+                add_all_to_calendar: "Add All Dates to Calendar",
+                random_gift_suggestion: "Random Gift Suggestion",
+                edit_button: "Edit",
+                delete_button: "Delete",
+                enter_valid_format: "Please enter in the correct format. (e.g., 01-01)",
+                delete_confirmation: "Are you sure you want to delete this anniversary?",
+                select_valid_dates: "Please select valid start and end dates.",
+                footer_text: "Made by Juheon Choi"
+            }
+        };
+
+        let currentLanguage = 'ko';
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'ko' ? 'en' : 'ko';
+            applyLanguage();
+        }
+
+        function applyLanguage() {
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                element.innerHTML = languageData[currentLanguage][key] || key;
+            });
+
+            // 입력 필드의 placeholder 변경
+            document.getElementById('eventName').setAttribute('placeholder', languageData[currentLanguage]['event_name_placeholder']);
+            document.getElementById('eventDate').setAttribute('placeholder', languageData[currentLanguage]['event_date_placeholder']);
+
+            // 고정 기념일 업데이트
+            displayFixedDates();
+            displayCustomDates();
+        }
+
+        // 기존 스크립트 코드
         const fixedDates = [
-            {id: "valentine", name: "발렌타인 데이", date: "02-14", checked: true},
-            {id: "whiteday", name: "화이트 데이", date: "03-14", checked: true},
-            {id: "christmas", name: "크리스마스", date: "12-25", checked: true}
+            {id: "valentine", name: {"ko": "발렌타인 데이", "en": "Valentine's Day"}, date: "02-14", checked: true},
+            {id: "whiteday", name: {"ko": "화이트 데이", "en": "White Day"}, date: "03-14", checked: true},
+            {id: "christmas", name: {"ko": "크리스마스", "en": "Christmas"}, date: "12-25", checked: true}
         ];
         let customDates = [];
         let suggestedDates = [];
@@ -290,7 +408,7 @@
                 <div class="checkbox-container">
                     <input type="checkbox" id="${date.id}" ${date.checked ? 'checked' : ''} onchange="updateFixedDate('${date.id}')">
                     <label for="${date.id}" class="checkbox-custom"></label>
-                    <label for="${date.id}" class="checkbox-label">${date.name}: ${date.date}</label>
+                    <label for="${date.id}" class="checkbox-label">${date.name[currentLanguage]}: ${date.date}</label>
                 </div>
             `).join("");
         }
@@ -311,7 +429,7 @@
                 document.getElementById("eventName").value = "";
                 document.getElementById("eventDate").value = "";
             } else {
-                alert("올바른 형식으로 입력해주세요. (예: 01-01)");
+                alert(languageData[currentLanguage]['enter_valid_format']);
             }
         }
 
@@ -321,8 +439,8 @@
                 <div class="custom-date-item">
                     <span>${date.name}: ${date.date}</span>
                     <div>
-                        <button onclick="editCustomEvent(${index})">수정</button>
-                        <button onclick="deleteCustomEvent(${index})">삭제</button>
+                        <button onclick="editCustomEvent(${index})" data-lang-key="edit_button">${languageData[currentLanguage]['edit_button']}</button>
+                        <button onclick="deleteCustomEvent(${index})" data-lang-key="delete_button">${languageData[currentLanguage]['delete_button']}</button>
                     </div>
                 </div>
             `).join("");
@@ -337,7 +455,7 @@
         }
 
         function deleteCustomEvent(index) {
-            if (confirm("이 기념일을 삭제하시겠습니까?")) {
+            if (confirm(languageData[currentLanguage]['delete_confirmation'])) {
                 customDates.splice(index, 1);
                 displayCustomDates();
             }
@@ -358,7 +476,7 @@
             const suggestionsDiv = document.getElementById("suggestions");
 
             if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-                alert("올바른 시작일과 종료일을 선택해주세요.");
+                alert(languageData[currentLanguage]['select_valid_dates']);
                 return;
             }
 
@@ -371,7 +489,7 @@
                     const [month, day] = event.date.split('-').map(Number);
                     const eventDate = new Date(year, month - 1, day);
                     if (eventDate >= startDate && eventDate <= endDate) {
-                        suggestedDates.push({name: event.name, date: eventDate});
+                        suggestedDates.push({name: event.name[currentLanguage] || event.name, date: eventDate});
                     }
                 });
             }
@@ -387,7 +505,7 @@
 
                 if (randomDate <= endDate && !isConflictingDate(randomDate, interval)) {
                     suggestedDates.push({
-                        name: `랜덤 선물 추천일`,
+                        name: languageData[currentLanguage]['random_gift_suggestion'],
                         date: randomDate
                     });
                 }
@@ -440,13 +558,15 @@
             e.target.value = value;
         });
 
-        displayFixedDates();
-
+        // 초기화
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("startDate").value = today;
         const oneYearLater = new Date();
         oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
         document.getElementById("endDate").value = oneYearLater.toISOString().split('T')[0];
+
+        displayFixedDates();
+        applyLanguage();
     </script>
 </body>
 </html>
