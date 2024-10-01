@@ -658,6 +658,8 @@ body {
             const date = document.getElementById("eventDate").value;
             if (name && date && /^\d{2}-\d{2}$/.test(date)) {
                 customDates.push({name, date});
+                // localStorage에 데이터 저장
+                localStorage.setItem("customDates", JSON.stringify(customDates));
                 displayCustomDates();
                 document.getElementById("eventName").value = "";
                 document.getElementById("eventDate").value = "";
@@ -665,6 +667,7 @@ body {
                 alert(languageData[currentLanguage]['enter_valid_format']);
             }
         }
+
 
         function displayCustomDates() {
             const customDatesDiv = document.getElementById("customDates");
@@ -684,15 +687,21 @@ body {
             document.getElementById("eventName").value = event.name;
             document.getElementById("eventDate").value = event.date;
             customDates.splice(index, 1);
+            // localStorage에 업데이트된 customDates 저장
+            localStorage.setItem("customDates", JSON.stringify(customDates));
             displayCustomDates();
         }
 
+
         function deleteCustomEvent(index) {
-            if (confirm(languageData[currentLanguage]['delete_confirmation'])) {
-                customDates.splice(index, 1);
-                displayCustomDates();
-            }
-        }
+    if (confirm(languageData[currentLanguage]['delete_confirmation'])) {
+        customDates.splice(index, 1);
+        // localStorage에 업데이트된 customDates 저장
+        localStorage.setItem("customDates", JSON.stringify(customDates));
+        displayCustomDates();
+    }
+}
+
 
         function setInterval(days, element) {
             document.getElementById("customInterval").value = days;
@@ -813,30 +822,37 @@ body {
         document.getElementById("endDate").value = oneYearLater.toISOString().split('T')[0];
 
         window.onload = function() {
-    // 기존의 초기화 코드
     createIntervalButtons();
     displayFixedDates();
     applyLanguage();
 
+    // localStorage에서 저장된 customDates 불러오기
+    const storedCustomDates = localStorage.getItem("customDates");
+    if (storedCustomDates) {
+        customDates = JSON.parse(storedCustomDates);
+        displayCustomDates();
+    }
+
     // 배경 애니메이션 효과
     function createRandomShape() {
-    const shape = document.createElement('div');
-    shape.classList.add('shape');
-    const size = Math.random() * 100 + 50;
-    shape.style.width = `${size}px`;
-    shape.style.height = `${size}px`;
-    shape.style.top = `${Math.random() * 100}%`;
-    shape.style.left = `${Math.random() * 100}%`;
-    shape.style.animationDuration = `${Math.random() * 20 + 10}s`;
-    shape.style.animationDelay = `${Math.random() * 5}s`;
-    shape.style.opacity = Math.random() * 0.5 + 0.1;
-    document.querySelector('.background-animation').appendChild(shape);
-}
+        const shape = document.createElement('div');
+        shape.classList.add('shape');
+        const size = Math.random() * 100 + 50;
+        shape.style.width = `${size}px`;
+        shape.style.height = `${size}px`;
+        shape.style.top = `${Math.random() * 100}%`;
+        shape.style.left = `${Math.random() * 100}%`;
+        shape.style.animationDuration = `${Math.random() * 20 + 10}s`;
+        shape.style.animationDelay = `${Math.random() * 5}s`;
+        shape.style.opacity = Math.random() * 0.5 + 0.1;
+        document.querySelector('.background-animation').appendChild(shape);
+    }
 
     for (let i = 0; i < 5; i++) {
         createRandomShape();
     }
 };
+
     </script>
 </body>
 </html>
