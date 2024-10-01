@@ -4,109 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>팬시한 선물 날짜 제안 사이트</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #6200ee;
-            --secondary-color: #03dac6;
-            --background-color: #f5f5f5;
-            --text-color: #333;
-            --card-background: #ffffff;
+        /* 배경 그라데이션 애니메이션 */
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
+
         body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            font-family: 'Noto Sans KR', 'Montserrat', sans-serif;
             margin: 0;
             padding: 0;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBackground 15s ease infinite;
+            color: #fff;
         }
+
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
         }
+
         h1, h2 {
-            color: var(--primary-color);
             text-align: center;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
+
         .card {
-            background-color: var(--card-background);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: box-shadow 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .card:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.3);
         }
+
         input[type="text"], input[type="date"], input[type="number"], button {
             width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
             box-sizing: border-box;
+            font-size: 1em;
         }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
         button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
+            background-color: #ff6b81;
+            color: #fff;
+            font-weight: 700;
+            text-transform: uppercase;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         button:hover {
-            background-color: #3700b3;
+            background-color: #ff4757;
         }
+
         .interval-btn {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
+            background-color: #70a1ff;
+            color: #fff;
             margin: 5px;
-            padding: 10px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: 700;
             transition: background-color 0.3s ease;
         }
-        .interval-btn.active {
-            background-color: #018786;
-            color: white;
+
+        .interval-btn.active, .interval-btn:hover {
+            background-color: #1e90ff;
         }
+
         .custom-date-item {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
         }
+
         .custom-date-item button {
-            margin-left: 5px;
+            margin-left: 10px;
             width: auto;
+            background-color: #ffa502;
         }
+
+        .custom-date-item button:hover {
+            background-color: #e67e22;
+        }
+
         .explanation {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #e9e9e9;
-            border-radius: 4px;
+            font-size: 0.95em;
+            color: #f1f2f6;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            line-height: 1.5;
         }
+
         .date-suggestion {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
             transition: transform 0.3s ease;
         }
+
         .date-suggestion:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
         }
+
+        label {
+            font-weight: 700;
+            display: block;
+            margin-top: 20px;
+        }
+
         @media (max-width: 600px) {
             .container {
-                padding: 10px;
+                padding: 20px 10px;
             }
-            .card {
-                padding: 15px;
+
+            h1, h2 {
+                font-size: 1.5em;
             }
         }
     </style>
@@ -114,36 +158,36 @@
 <body>
     <div class="container">
         <h1>팬시한 선물 날짜 제안 사이트</h1>
-        
+
         <div class="card">
             <h2>기본 기념일</h2>
             <div id="fixedDates"></div>
         </div>
-        
+
         <div class="card">
             <h2>추가 기념일</h2>
             <input type="text" id="eventName" placeholder="기념일 이름">
-            <input type="text" id="eventDate" placeholder="MMDD" maxlength="5">
+            <input type="text" id="eventDate" placeholder="MM-DD" maxlength="5">
             <button onclick="addCustomEvent()">추가</button>
             <div id="customDates"></div>
         </div>
-        
+
         <div class="card">
             <h2>선물 랜덤 주기 설정</h2>
             <input type="number" id="customInterval" min="7" value="30">
             <div>
-                <button class="interval-btn" onclick="setInterval(14)">2주</button>
-                <button class="interval-btn" onclick="setInterval(21)">3주</button>
-                <button class="interval-btn" onclick="setInterval(30)">1달</button>
-                <button class="interval-btn" onclick="setInterval(60)">2달</button>
-                <button class="interval-btn" onclick="setInterval(90)">3달</button>
+                <button class="interval-btn" onclick="setInterval(14, this)">2주</button>
+                <button class="interval-btn" onclick="setInterval(21, this)">3주</button>
+                <button class="interval-btn" onclick="setInterval(30, this)">1달</button>
+                <button class="interval-btn" onclick="setInterval(60, this)">2달</button>
+                <button class="interval-btn" onclick="setInterval(90, this)">3달</button>
             </div>
             <p class="explanation">
                 랜덤 주기 설정: 설정한 일수를 기준으로 ±25% 범위 내에서 랜덤하게 날짜가 선택됩니다.<br>
-                예: 30일 설정 시 23일에서 30일 사이의 랜덤한 날짜가 선택됩니다.
+                예: 30일 설정 시 23일에서 37일 사이의 랜덤한 날짜가 선택됩니다.
             </p>
         </div>
-        
+
         <div class="card">
             <h2>기간 설정</h2>
             <label for="startDate">시작일:</label>
@@ -151,13 +195,13 @@
             <label for="endDate">종료일:</label>
             <input type="date" id="endDate">
         </div>
-        
+
         <div class="card">
             <h2>추천 날짜</h2>
             <button onclick="generateSuggestions()">추천 날짜 생성</button>
             <div id="suggestions"></div>
         </div>
-        
+
         <div class="card">
             <h2>캘린더에 추가</h2>
             <button onclick="exportToCalendar()">모든 날짜를 캘린더에 추가</button>
@@ -165,6 +209,7 @@
     </div>
 
     <script>
+        // 기존 스크립트 코드 (변경 없음)
         const fixedDates = [
             {id: "valentine", name: "발렌타인 데이", date: "02-14", checked: true},
             {id: "whiteday", name: "화이트 데이", date: "03-14", checked: true},
@@ -208,8 +253,10 @@
             customDatesDiv.innerHTML = customDates.map((date, index) => `
                 <div class="custom-date-item">
                     <span>${date.name}: ${date.date}</span>
-                    <button onclick="editCustomEvent(${index})">수정</button>
-                    <button onclick="deleteCustomEvent(${index})">삭제</button>
+                    <div>
+                        <button onclick="editCustomEvent(${index})">수정</button>
+                        <button onclick="deleteCustomEvent(${index})">삭제</button>
+                    </div>
                 </div>
             `).join("");
         }
@@ -229,12 +276,12 @@
             }
         }
 
-        function setInterval(days) {
+        function setInterval(days, element) {
             document.getElementById("customInterval").value = days;
             document.querySelectorAll('.interval-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            element.classList.add('active');
         }
 
         function generateSuggestions() {
@@ -242,14 +289,14 @@
             const startDate = new Date(document.getElementById("startDate").value);
             const endDate = new Date(document.getElementById("endDate").value);
             const suggestionsDiv = document.getElementById("suggestions");
-            
+
             if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
                 alert("올바른 시작일과 종료일을 선택해주세요.");
                 return;
             }
-            
+
             suggestedDates = [];
-            
+
             const selectedFixedDates = fixedDates.filter(date => date.checked);
             const allDates = [...selectedFixedDates, ...customDates];
             for (let year = startDate.getFullYear(); year <= endDate.getFullYear(); year++) {
@@ -264,26 +311,26 @@
 
             let currentDate = new Date(startDate);
             while (currentDate <= endDate) {
-                const randomRange = Math.floor(interval / 4);
+                const randomRange = Math.floor(interval * 0.25);
                 const minDays = interval - randomRange;
-                const maxDays = interval;
+                const maxDays = interval + randomRange;
                 const randomDays = Math.floor(Math.random() * (maxDays - minDays + 1)) + minDays;
-                
+
                 const randomDate = new Date(currentDate.getTime() + randomDays * 24 * 60 * 60 * 1000);
-                
+
                 if (randomDate <= endDate && !isConflictingDate(randomDate, interval)) {
                     suggestedDates.push({
                         name: `랜덤 선물 추천일`,
                         date: randomDate
                     });
                 }
-                
+
                 currentDate = new Date(currentDate.getTime() + interval * 24 * 60 * 60 * 1000);
             }
-            
+
             suggestedDates.sort((a, b) => a.date - b.date);
-            
-            suggestionsDiv.innerHTML = suggestedDates.map(suggestion => 
+
+            suggestionsDiv.innerHTML = suggestedDates.map(suggestion =>
                 `<div class="date-suggestion">${suggestion.name}: ${suggestion.date.toISOString().split('T')[0]}</div>`
             ).join("");
         }
@@ -297,7 +344,7 @@
 
         function exportToCalendar() {
             let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//선물 날짜 제안 사이트//KO\n";
-            
+
             suggestedDates.forEach(event => {
                 const dateString = event.date.toISOString().replace(/-|:|\.\d+/g, '');
                 icsContent += `BEGIN:VEVENT\n`;
@@ -305,7 +352,7 @@
                 icsContent += `SUMMARY:${event.name}\n`;
                 icsContent += `END:VEVENT\n`;
             });
-            
+
             icsContent += "END:VCALENDAR";
 
             const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
