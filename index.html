@@ -4,74 +4,214 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>선물 날짜 제안 사이트</title>
+    <!-- 아이콘 및 폰트 추가 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 애니메이션을 위한 AOS 라이브러리 추가 -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <style>
-        /* 배경 그라데이션 애니메이션 */
-        @keyframes gradientBackground {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        .background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
 
-        body {
+.shape {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: moveShape 20s infinite ease-in-out;
+}
+
+@keyframes moveShape {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(100px, 100px) rotate(90deg);
+    }
+    50% {
+        transform: translate(0, 200px) rotate(180deg);
+    }
+    75% {
+        transform: translate(-100px, 100px) rotate(270deg);
+    }
+}
+
+.shape1 {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    left: -100px;
+}
+
+.shape2 {
+    width: 300px;
+    height: 300px;
+    bottom: -50px;
+    right: -50px;
+    animation-duration: 25s;
+    animation-direction: reverse;
+}
+
+.shape3 {
+    width: 200px;
+    height: 200px;
+    bottom: 50%;
+    left: 50%;
+    animation-duration: 30s;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+body {
+    background: linear-gradient(45deg, #667eea, #764ba2, #7f7fd5, #86a8e7, #91eae4, #f6d365, #fda085);
+    background-size: 300% 300%;
+    animation: changeBackground 15s ease infinite;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+@keyframes changeBackground {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+        /* 배경 그라데이션 애니메이션 */
+        /* body {
             font-family: 'Noto Sans KR', 'Montserrat', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBackground 15s ease infinite;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
+            overflow-x: hidden;
+        } */
+        /* 네비게이션 바 */
+        .navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    z-index: 1000;
+    background-color: rgba(19, 19, 19, 0.081);
+}
+
+.navbar .language-switcher {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 15px;
+    padding: 4px 8px;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.7em;
+    line-height: 1;
+    position: absolute;
+    top: 0px;
+    right: 70px;
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
+    overflow: visible;
+}
+
+.navbar .language-switcher:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+        /* 히어로 섹션 */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 0 20px;
         }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s;
+        }
+
+        .hero button {
+            width: auto;
+            padding: 15px 30px;
+            font-size: 1em;
+            animation: fadeInUp 1s;
+        }
+
+        /* 섹션 공통 스타일 */
+        .section {
+            padding: 80px 20px;
+        }
+
+        .section h2 {
+    font-size: 2.5em; /* 글자 크기 증가 */
+    font-weight: 800; /* 글자 굵기 증가 (더 굵게) */
+    text-align: center;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ffffff; /* 글자 색상 설정 (흰색) */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* 텍스트에 그림자 효과 추가 */
+}
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 0 20px;
         }
 
-        h1, h2 {
-            text-align: center;
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
+        /* 카드 스타일 */
         .card {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             padding: 40px;
             margin-bottom: 40px;
             backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(45deg);
-            animation: rotateBackground 6s linear infinite;
-            pointer-events: none; /* 클릭 이벤트 무시 */
-        }
-
-        @keyframes rotateBackground {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-15px);
+            transform: translateY(-10px);
             box-shadow: 0 25px 55px rgba(0, 0, 0, 0.3);
         }
 
+        /* 입력 필드 및 버튼 스타일 */
         input[type="text"], input[type="date"], input[type="number"], button {
             width: 100%;
             padding: 15px;
@@ -80,6 +220,8 @@
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 1em;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
         }
 
         input::placeholder {
@@ -100,22 +242,42 @@
             background-color: #ff4757;
         }
 
-        .interval-btn {
-            background-color: #70a1ff;
-            color: #fff;
-            margin: 5px;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: background-color 0.3s ease;
-        }
+        /* 인터벌 버튼 스타일 */
+        #intervalButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
 
-        .interval-btn.active, .interval-btn:hover {
-            background-color: #1e90ff;
-        }
+.interval-btn {
+    background-color: #70a1ff;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 0.8em;
+    flex: 0 1 calc(20% - 10px); /* 5개의 버튼이 한 줄에 들어가도록 설정 */
+}
 
+.interval-btn.active, .interval-btn:hover {
+    background-color: #1e90ff;
+    transform: scale(1.05);
+}
+
+#customInterval {
+    margin-bottom: 10px;
+}
+
+.explanation {
+    margin-top: 10px;
+    font-size: 0.85em;
+}
+        /* 커스텀 날짜 아이템 */
         .custom-date-item {
             display: flex;
             align-items: center;
@@ -136,6 +298,7 @@
             background-color: #e67e22;
         }
 
+        /* 설명 스타일 */
         .explanation {
             font-size: 0.95em;
             color: #f1f2f6;
@@ -146,6 +309,7 @@
             line-height: 1.5;
         }
 
+        /* 날짜 추천 아이템 */
         .date-suggestion {
             background-color: rgba(0, 0, 0, 0.3);
             color: #fff;
@@ -213,104 +377,137 @@
             font-size: 1em;
         }
 
-        /* 언어 전환 버튼 스타일 */
-
-        .language-switcher {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    padding: 10px 20px;
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: fixed; /* 화면에 고정 */
-    top: 10px; /* 상단에서 20px 떨어짐 */
-    right: 20px; /* 우측에서 20px 떨어짐 */
-    z-index: 1000; /* 화면 맨 위로 */
-    width: auto; /* 가로 크기를 자동으로 설정 */
-    text-align: center; /* 텍스트 중앙 정렬 */
-    white-space: nowrap; /* 텍스트가 버튼 크기를 넘지 않도록 줄 바꿈 방지 */
-}
-
-
-        .language-switcher:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-        }
-
         /* 푸터 스타일 */
         .footer {
             text-align: center;
             padding: 20px 0;
             font-size: 0.9em;
             color: #f1f2f6;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* 애니메이션 키프레임 */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (max-width: 600px) {
-            .container {
-                padding: 20px 10px;
+            .navbar {
+                padding: 15px 20px;
             }
 
-            h1, h2 {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero p {
+                font-size: 1em;
+            }
+
+            .section {
+                padding: 60px 20px;
+            }
+
+            h2 {
                 font-size: 1.5em;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 언어 전환 버튼 -->
-    <button class="language-switcher" onclick="toggleLanguage()">
-        한글/ENG
-    </button>
+    <div class="background-animation">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+    </div>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar" id="navbar">
+        <div class="logo" data-lang-key="title">선물 날짜 제안 사이트</div>
+        <button class="language-switcher" onclick="toggleLanguage()">한글/ENG</button>
+    </nav>
 
-    <div class="container">
-        <h1 data-lang-key="title">팬시한 선물 날짜 제안 사이트</h1>
+    <!-- 히어로 섹션 -->
+    <section class="hero">
+        <h1 data-lang-key="hero_title">특별한 날을 위한 선물 계획</h1>
+        <p data-lang-key="hero_subtitle">소중한 사람에게 선물을 전할 완벽한 날짜를 찾아보세요.</p>
+        <button onclick="scrollToSection('main-content')" data-lang-key="hero_button">시작하기</button>
+    </section>
 
-        <div class="card">
+    <!-- 메인 컨텐츠 섹션 -->
+    <div class="container" id="main-content">
+        <section class="section" data-aos="fade-up">
             <h2 data-lang-key="basic_anniversaries">기본 기념일</h2>
-            <div id="fixedDates"></div>
-        </div>
-
-        <div class="card">
-            <h2 data-lang-key="add_custom_event">추가 기념일</h2>
-            <input type="text" id="eventName" placeholder="기념일 이름">
-            <input type="text" id="eventDate" placeholder="MM-DD" maxlength="5">
-            <button onclick="addCustomEvent()" data-lang-key="add_button">추가</button>
-            <div id="customDates"></div>
-        </div>
-
-        <div class="card">
-            <h2 data-lang-key="gift_interval_setting">선물 랜덤 주기 설정</h2>
-            <input type="number" id="customInterval" min="7" value="30">
-            <div>
-                <button class="interval-btn" onclick="setInterval(14, this)">2주</button>
-                <button class="interval-btn" onclick="setInterval(21, this)">3주</button>
-                <button class="interval-btn" onclick="setInterval(30, this)">1달</button>
-                <button class="interval-btn" onclick="setInterval(60, this)">2달</button>
-                <button class="interval-btn" onclick="setInterval(90, this)">3달</button>
+            <div class="card">
+                <div id="fixedDates"></div>
             </div>
-            <p class="explanation" data-lang-key="random_interval_explanation">
-                랜덤 주기 설정: 설정한 일수를 기준으로 ±25% 범위 내에서 랜덤하게 날짜가 선택됩니다.<br>
-                예: 30일 설정 시 23일에서 37일 사이의 랜덤한 날짜가 선택됩니다.
-            </p>
-        </div>
+        </section>
 
-        <div class="card">
+        <section class="section" data-aos="fade-up">
+            <h2 data-lang-key="add_custom_event">추가 기념일</h2>
+            <div class="card">
+                <input type="text" id="eventName" placeholder="기념일 이름">
+                <input type="text" id="eventDate" placeholder="MM-DD" maxlength="5">
+                <button onclick="addCustomEvent()" data-lang-key="add_button">추가</button>
+                <div id="customDates"></div>
+            </div>
+        </section>
+
+        <section class="section" data-aos="fade-up">
+            <h2 data-lang-key="gift_interval_setting">선물 랜덤 주기 설정</h2>
+            <div class="card">
+                <input type="number" id="customInterval" min="7" value="30">
+                <div id="intervalButtons">
+                    <!-- 인터벌 버튼은 스크립트에서 생성 -->
+                </div>
+                <p class="explanation" data-lang-key="random_interval_explanation">
+                    랜덤 주기 설정: 설정한 일수를 기준으로 ±25% 범위 내에서 랜덤하게 날짜가 선택됩니다.<br>
+                    예: 30일 설정 시 23일에서 37일 사이의 랜덤한 날짜가 선택됩니다.
+                </p>
+            </div>
+        </section>
+
+        <section class="section" data-aos="fade-up">
             <h2 data-lang-key="period_setting">기간 설정</h2>
-            <label for="startDate" data-lang-key="start_date_label">시작일:</label>
-            <input type="date" id="startDate" value="">
-            <label for="endDate" data-lang-key="end_date_label">종료일:</label>
-            <input type="date" id="endDate">
-        </div>
+            <div class="card">
+                <label for="startDate" data-lang-key="start_date_label">시작일:</label>
+                <input type="date" id="startDate" value="">
+                <label for="endDate" data-lang-key="end_date_label">종료일:</label>
+                <input type="date" id="endDate">
+            </div>
+        </section>
 
-        <div class="card">
+        <section class="section" data-aos="fade-up">
             <h2 data-lang-key="suggestions">추천 날짜</h2>
-            <button onclick="generateSuggestions()" data-lang-key="generate_suggestions">추천 날짜 생성</button>
-            <div id="suggestions"></div>
-        </div>
+            <div class="card">
+                <button onclick="generateSuggestions()" data-lang-key="generate_suggestions">추천 날짜 생성</button>
+                <div id="suggestions"></div>
+            </div>
+        </section>
 
-        <div class="card">
+        <section class="section" data-aos="fade-up">
             <h2 data-lang-key="add_to_calendar">캘린더에 추가</h2>
-            <button onclick="exportToCalendar()" data-lang-key="add_all_to_calendar">모든 날짜를 캘린더에 추가</button>
-        </div>
+            <div class="card">
+                <button onclick="exportToCalendar()" data-lang-key="add_all_to_calendar">모든 날짜를 캘린더에 추가</button>
+            </div>
+        </section>
     </div>
 
     <!-- 푸터 추가 -->
@@ -318,15 +515,29 @@
         Made by Juheon Choi
     </div>
 
+    <!-- AOS 라이브러리 및 스크립트 추가 -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+
+    <script>
+        
         // 다국어 지원을 위한 언어 데이터
         const languageData = {
             ko: {
                 title: "선물 날짜 제안 사이트",
+                hero_title: "특별한 날을 위한 선물 계획",
+                hero_subtitle: "소중한 사람에게 선물을 전할 완벽한 날짜를 찾아보세요.",
+                hero_button: "시작하기",
                 basic_anniversaries: "기본 기념일",
                 add_custom_event: "추가 기념일",
                 event_name_placeholder: "기념일 이름",
                 event_date_placeholder: "MM-DD",
+                interval_buttons: ["2주", "3주", "1달", "2달", "3달"],
                 add_button: "추가",
                 gift_interval_setting: "선물 랜덤 주기 설정",
                 random_interval_explanation: "랜덤 주기 설정: 설정한 일수를 기준으로 ±25% 범위 내에서 랜덤하게 날짜가 선택됩니다.<br>예: 30일 설정 시 23일에서 37일 사이의 랜덤한 날짜가 선택됩니다.",
@@ -347,6 +558,9 @@
             },
             en: {
                 title: "Gift Date Suggestion Site",
+                hero_title: "Plan Gifts for Special Days",
+                hero_subtitle: "Find the perfect date to give a gift to your loved one.",
+                hero_button: "Get Started",
                 basic_anniversaries: "Basic Anniversaries",
                 add_custom_event: "Add Custom Anniversary",
                 event_name_placeholder: "Event Name",
@@ -357,6 +571,7 @@
                 period_setting: "Set Period",
                 start_date_label: "Start Date:",
                 end_date_label: "End Date:",
+                interval_buttons: ["2 Weeks", "3 Weeks", "1 Month", "2 Months", "3 Months"],
                 generate_suggestions: "Generate Suggestions",
                 suggestions: "Date Suggestions",
                 add_to_calendar: "Add to Calendar",
@@ -382,6 +597,7 @@
             document.querySelectorAll('[data-lang-key]').forEach(element => {
                 const key = element.getAttribute('data-lang-key');
                 element.innerHTML = languageData[currentLanguage][key] || key;
+                createIntervalButtons();
             });
 
             // 입력 필드의 placeholder 변경
@@ -391,6 +607,21 @@
             // 고정 기념일 업데이트
             displayFixedDates();
             displayCustomDates();
+        }
+
+        // 네비게이션 바 스크롤 이벤트
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // 시작하기 버튼 클릭 시 스크롤 이동
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
 
         // 기존 스크립트 코드
@@ -526,6 +757,20 @@
                 return daysDifference < interval;
             });
         }
+        function createIntervalButtons() {
+            const intervalButtonsDiv = document.getElementById('intervalButtons');
+            const intervals = [14, 21, 30, 60, 90];
+            intervalButtonsDiv.innerHTML = '';
+            intervals.forEach((days, index) => {
+                const button = document.createElement('button');
+                button.className = 'interval-btn';
+                button.innerText = languageData[currentLanguage]['interval_buttons'][index];
+                button.onclick = function() {
+                    setInterval(days, this);
+                };
+                intervalButtonsDiv.appendChild(button);
+            });
+        }
 
         function exportToCalendar() {
             let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//선물 날짜 제안 사이트//KO\n";
@@ -557,7 +802,7 @@
             }
             e.target.value = value;
         });
-
+        
         // 초기화
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("startDate").value = today;
@@ -565,8 +810,31 @@
         oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
         document.getElementById("endDate").value = oneYearLater.toISOString().split('T')[0];
 
-        displayFixedDates();
-        applyLanguage();
+        window.onload = function() {
+    // 기존의 초기화 코드
+    createIntervalButtons();
+    displayFixedDates();
+    applyLanguage();
+
+    // 배경 애니메이션 효과
+    function createRandomShape() {
+    const shape = document.createElement('div');
+    shape.classList.add('shape');
+    const size = Math.random() * 100 + 50;
+    shape.style.width = `${size}px`;
+    shape.style.height = `${size}px`;
+    shape.style.top = `${Math.random() * 100}%`;
+    shape.style.left = `${Math.random() * 100}%`;
+    shape.style.animationDuration = `${Math.random() * 20 + 10}s`;
+    shape.style.animationDelay = `${Math.random() * 5}s`;
+    shape.style.opacity = Math.random() * 0.5 + 0.1;
+    document.querySelector('.background-animation').appendChild(shape);
+}
+
+    for (let i = 0; i < 5; i++) {
+        createRandomShape();
+    }
+};
     </script>
 </body>
 </html>
