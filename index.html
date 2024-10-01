@@ -38,18 +38,37 @@
         }
 
         .card {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            margin-bottom: 40px;
             backdrop-filter: blur(10px);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            animation: rotateBackground 6s linear infinite;
+        }
+
+        @keyframes rotateBackground {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.3);
+            transform: translateY(-15px);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.3);
         }
 
         input[type="text"], input[type="date"], input[type="number"], button {
@@ -144,6 +163,54 @@
             margin-top: 20px;
         }
 
+        /* 체크박스 스타일 */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkbox-custom {
+            width: 24px;
+            height: 24px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkbox-custom::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            background-color: #ff6b81;
+            border-radius: 3px;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s ease;
+        }
+
+        .checkbox-container input[type="checkbox"]:checked + .checkbox-custom {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .checkbox-container input[type="checkbox"]:checked + .checkbox-custom::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .checkbox-label {
+            cursor: pointer;
+            font-size: 1em;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px 10px;
@@ -209,7 +276,6 @@
     </div>
 
     <script>
-        // 기존 스크립트 코드 (변경 없음)
         const fixedDates = [
             {id: "valentine", name: "발렌타인 데이", date: "02-14", checked: true},
             {id: "whiteday", name: "화이트 데이", date: "03-14", checked: true},
@@ -221,9 +287,10 @@
         function displayFixedDates() {
             const fixedDatesDiv = document.getElementById("fixedDates");
             fixedDatesDiv.innerHTML = fixedDates.map(date => `
-                <div>
+                <div class="checkbox-container">
                     <input type="checkbox" id="${date.id}" ${date.checked ? 'checked' : ''} onchange="updateFixedDate('${date.id}')">
-                    <label for="${date.id}">${date.name}: ${date.date}</label>
+                    <label for="${date.id}" class="checkbox-custom"></label>
+                    <label for="${date.id}" class="checkbox-label">${date.name}: ${date.date}</label>
                 </div>
             `).join("");
         }
